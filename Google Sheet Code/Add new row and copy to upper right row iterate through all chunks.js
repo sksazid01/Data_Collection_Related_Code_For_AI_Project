@@ -5,10 +5,13 @@ function processAllChunkSheets() {
   sheets.forEach(function(sheet) {
     var sheetName = sheet.getName();
     
-    // Check if the sheet is a chunk sheet (e.g., named "ds1", "ds2", etc.)
+    // Check if the sheet is a chunk sheet with a number 18 or greater
     if (sheetName.startsWith('ds')) {
-      Logger.log('Processing sheet: ' + sheetName);
-      insertRowsWithFormulaAndColor(sheet);
+      var sheetNumber = parseInt(sheetName.substring(2), 10); // Extract the number part
+      if (sheetNumber >= 0) {
+        Logger.log('Processing sheet: ' + sheetName);
+        insertRowsWithFormulaAndColor(sheet);
+      }
     }
   });
 }
