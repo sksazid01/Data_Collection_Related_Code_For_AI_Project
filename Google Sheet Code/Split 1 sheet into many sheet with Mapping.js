@@ -4,7 +4,7 @@ function splitSheetIntoChunksWithColors() {
   var data = sourceSheet.getDataRange().getValues();
   var colors = sourceSheet.getDataRange().getBackgrounds();
   var numRows = data.length;
-  var chunkSize = 2; // Number of rows per new sheet
+  var chunkSize = 100; // Number of rows per new sheet
   var numChunks = Math.ceil(numRows / chunkSize);
 
   for (var i = 0; i < numChunks; i++) {
