@@ -5,10 +5,13 @@ function processAllChunkSheets() {
   sheets.forEach(function(sheet) {
     var sheetName = sheet.getName();
     
-    // Check if the sheet is a chunk sheet (e.g., named "ds1", "ds2", etc.)
+    // Check if the sheet is a chunk sheet starting from "ds3"
     if (sheetName.startsWith('ds')) {
-      Logger.log('Processing sheet: ' + sheetName);
-      protectOddRows(sheet);
+      var sheetNumber = parseInt(sheetName.substring(2), 10); // Extract the number part
+      if (sheetNumber >= 1) { // Start processing from "ds3"
+        Logger.log('Processing sheet: ' + sheetName);
+        protectOddRows(sheet);
+      }
     }
   });
 }
@@ -16,6 +19,7 @@ function processAllChunkSheets() {
 function protectOddRows(sheet) {
   var numRows = sheet.getMaxRows();
   var numCols = 4; // Only protect the first four columns
+  var rangesToProtect = [];
 
   for (var i = 1; i <= numRows; i += 2) { // Iterate over odd rows
     var rowData = sheet.getRange(i, 1, 1, numCols).getValues()[0];
@@ -24,8 +28,12 @@ function protectOddRows(sheet) {
       break; // Stop processing if an empty row is encountered
     }
     
-    var range = sheet.getRange(i, 1, 1, numCols);
-    var protection = range.protect().setDescription('Protect odd row ' + i);
+    rangesToProtect.push(sheet.getRange(i, 1, 1, numCols));
+  }
+  
+  if (rangesToProtect.length > 0) {
+    var protection = sheet.protect().setDescription('Protect odd rows');
+    protection.setUnprotectedRanges(rangesToProtect);
     
     // Remove all editors except the owner
     protection.removeEditors(protection.getEditors());
@@ -35,6 +43,6 @@ function protectOddRows(sheet) {
     }
     
     // Allow only the specified email to edit
-    protection.addEditor('example@gmail.com');
+    protection.addEditor('ahasanulhaque20@gmail.com');
   }
 }
