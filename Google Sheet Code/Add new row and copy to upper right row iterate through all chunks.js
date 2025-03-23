@@ -1,5 +1,19 @@
-function insertRowsWithFormulaAndColor() {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+function processAllChunkSheets() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheets = ss.getSheets();
+  
+  sheets.forEach(function(sheet) {
+    var sheetName = sheet.getName();
+    
+    // Check if the sheet is a chunk sheet (e.g., named "ds1", "ds2", etc.)
+    if (sheetName.startsWith('ds')) {
+      Logger.log('Processing sheet: ' + sheetName);
+      insertRowsWithFormulaAndColor(sheet);
+    }
+  });
+}
+
+function insertRowsWithFormulaAndColor(sheet) {
   var data = sheet.getDataRange().getValues();
   var numRows = data.length;
   var numCols = data[0].length;
@@ -21,8 +35,8 @@ function insertRowsWithFormulaAndColor() {
         var formulaCell = sheet.getRange(i + 1, 3); // This targets column C of the current row
         formulaCell.setFormula('=IF(LEFT(' + newRowCell.getA1Notation() + ', 1) = ">", MID(' + newRowCell.getA1Notation() + ', 2, LEN(' + newRowCell.getA1Notation() + ') - 1), ' + newRowCell.getA1Notation() + ')');
         
-        // Set the background color of the formula cell to white
-        formulaCell.setBackground('#c1f7c1'); // White color
+        // Set the background color of the formula cell to light green
+        formulaCell.setBackground('#c1f7c1'); // Light green color
       }
     }
   }
