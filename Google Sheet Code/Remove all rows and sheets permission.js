@@ -5,13 +5,23 @@ function removeAllProtections() {
   sheets.forEach(function(sheet) {
     Logger.log('Removing protections from sheet: ' + sheet.getName());
     
-    // Get all protections on the sheet
-    var protections = sheet.getProtections(SpreadsheetApp.ProtectionType.RANGE);
-    
-    // Remove each protection
-    protections.forEach(function(protection) {
+    // Remove range protections
+    var rangeProtections = sheet.getProtections(SpreadsheetApp.ProtectionType.RANGE);
+    rangeProtections.forEach(function(protection) {
       protection.remove();
-      Logger.log('Removed protection from range: ' + protection.getRange().getA1Notation());
+      Logger.log('Removed range protection from: ' + protection.getRange().getA1Notation());
+    });
+    
+    // Remove sheet protections
+    var sheetProtection = sheet.getProtections(SpreadsheetApp.ProtectionType.SHEET);
+    sheetProtection.forEach(function(protection) {
+      protection.remove();
+      Logger.log('Removed sheet protection from: ' + sheet.getName());
     });
   });
+}
+
+// Main function to run the process
+function main() {
+  removeAllProtections(); // Remove all protections from all sheets
 }
